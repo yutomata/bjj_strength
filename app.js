@@ -43,9 +43,16 @@ fetch('moves.json')
       }
       
       const currentExercise = exercises[exerciseIndex];
-      const exerciseParts = currentExercise.split(" ");
-      const exerciseName = exerciseParts.slice(0, -1).join(" ");
-      const exerciseDuration = parseInt(exerciseParts[exerciseParts.length - 2]);
+      // Match the number within parentheses, assuming format like "(10 seconds)"
+      const exerciseParts = currentExercise.match(/^(.*)\s\((\d+)\sseconds\)$/);
+      
+      if (!exerciseParts) {
+        console.error('Invalid exercise format:', currentExercise);
+        return;
+      }
+      
+      const exerciseName = exerciseParts[1]; // Extract exercise name
+      const exerciseDuration = parseInt(exerciseParts[2]); // Extract and parse duration (e.g., 10 seconds)
       
       moveDisplay.innerText = exerciseName; // Show the exercise name
       startTimer(exerciseDuration); // Start the timer for this exercise
