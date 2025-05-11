@@ -1,38 +1,49 @@
-let moves = [];
-let currentIndex = 0;
-let timer;
-let timeLeft = 30;
-
-async function loadMoves() {
-  const url = 'https://raw.githubusercontent.com/your-username/your-repo/main/moves.json';
-  const res = await fetch(url);
-  moves = await res.json();
-  currentIndex = 0;
-  showMove();
-}
-
-function showMove() {
-  if (moves.length === 0) return;
-  document.getElementById('move').textContent = moves[currentIndex];
-  resetTimer();
-}
-
-function nextMove() {
-  currentIndex = (currentIndex + 1) % moves.length;
-  showMove();
-}
-
-function resetTimer() {
-  clearInterval(timer);
-  timeLeft = 30;
-  document.getElementById('timer').textContent = timeLeft;
-  timer = setInterval(() => {
-    timeLeft--;
-    document.getElementById('timer').textContent = timeLeft;
-    if (timeLeft <= 0) {
-      nextMove();
+// Load the moves from moves.json
+fetch('moves.json')
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to load moves.json');
     }
-  }, 1000);
-}
+    return response.json();
+  })
+  .then(data => {
+    let moves = data; // This is the array of moves
+    let moveIndex = 0; // Start from the first move
 
-loadMoves();
+    // Function to update the move on the screen
+    function updateMove() {
+      const moveDisplay = document.getElementById('move-display');
+      if (moveDisplay) {
+        moveDisplay.innerText = moves[moveIndex];
+      }
+    }
+
+    // Update the move on page load
+    updateMove();
+
+    // Button to go to the next move
+    document.getElementById('next-move').addEventListener('click', function() {
+      moveIndex++; // Move to the next move
+      if (moveIndex >= moves.length) {
+        moveIndex = 0; // Loop back to the first move
+      }
+      updateMove(); // Update the displayed move
+    });
+
+    // Timer logic (optional)
+    let timer = 60; // Example timer in seconds
+    let timerDisplay = document.getElementById('timer');
+    if (timerDisplay) {
+      setInterval(function() {
+        if (timer > 0) {
+          timer--;
+          timerDisplay.innerText = timer;
+        }
+      }, 1000);
+    }
+
+  })
+  .catch(error => {
+    console.error('Error loading moves.json:', error);
+    document.getElementById('move-display').innerText = 'Error loading moves.';
+  });
