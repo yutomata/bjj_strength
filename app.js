@@ -15,6 +15,7 @@ window.onload = function () {
 
       // DOM elements
       const moveDisplay = document.getElementById('move-display');
+      const descriptionDisplay = document.getElementById('description-display');
       const timerDisplay = document.getElementById('timer');
       const nextMoveButton = document.getElementById('next-move');
       const startButton = document.getElementById('start-button');
@@ -47,27 +48,12 @@ window.onload = function () {
         const currentExercise = exercises[exerciseIndex];
         console.log('Current Exercise:', currentExercise); // Debug log
 
-        // Try to extract the name and the duration (log for debugging)
-        const exerciseParts = currentExercise.match(/^(.+?)\s\((\d+)\sseconds\)$/);
+        // Update the exercise name and description
+        moveDisplay.innerText = currentExercise.name;
+        descriptionDisplay.innerText = currentExercise.description;
 
-        if (exerciseParts) {
-          const exerciseName = exerciseParts[1]; // Extract exercise name
-          const exerciseDuration = parseInt(exerciseParts[2]); // Extract and parse duration (e.g., 10 seconds)
-
-          // Debug logs to check parsed values
-          console.log('Parsed Exercise Name:', exerciseName);
-          console.log('Parsed Exercise Duration (in seconds):', exerciseDuration);
-
-          // If we have valid data, update the display and start the timer
-          if (!isNaN(exerciseDuration)) {
-            moveDisplay.innerText = exerciseName; // Show the exercise name
-            startTimer(exerciseDuration); // Start the timer for this exercise
-          } else {
-            console.error('Invalid exercise duration:', exerciseDuration);
-          }
-        } else {
-          console.error('Failed to parse exercise format:', currentExercise);
-        }
+        // Start the timer for the exercise duration
+        startTimer(currentExercise.duration);
 
         exerciseIndex++;
       }
