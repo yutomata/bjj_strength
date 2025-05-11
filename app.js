@@ -1,4 +1,4 @@
-// Load the moves from moves.json
+// Fetch exercises from moves.json
 fetch('moves.json')
   .then(response => {
     if (!response.ok) {
@@ -7,41 +7,59 @@ fetch('moves.json')
     return response.json();
   })
   .then(data => {
-    let moves = data; // This is the array of moves
-    let moveIndex = 0; // Start from the first move
-
-    // Function to update the move on the screen
-    function updateMove() {
-      const moveDisplay = document.getElementById('move-display');
-      if (moveDisplay) {
-        moveDisplay.innerText = moves[moveIndex];
+    let exercises = data; // Array of exercises
+    let exerciseIndex = 0; // Track current exercise
+    let timerInterval;
+    
+    // DOM elements
+    const moveDisplay = document.getElementById('move-display');
+    const timerDisplay = document.getElementById('timer');
+    const nextMoveButton = document.getElementById('next-move');
+    const startButton = document.getElementById('start-button');
+    const sound = new Audio('https://www.soundjay.com/button/beep-07.wav'); // Sound for timer end
+    
+    // Function to update exercise and timer
+    function startTimer(duration) {
+      let timeRemaining = duration;
+      timerDisplay.innerText = timeRemaining;
+      
+      timerInterval = setInterval(function() {
+        timeRemaining--;
+        timerDisplay.innerText = timeRemaining;
+        
+        // When timer ends
+        if (timeRemaining <= 0) {
+          clearInterval(timerInterval); // Stop the timer
+          sound.play(); // Play beep sound
+          moveToNextExercise();
+        }
+      }, 1000); // Update every second
+    }
+    
+    // Function to display the next exercise
+    function moveToNextExercise() {
+      if (exerciseIndex >= exercises.length) {
+        exerciseIndex = 0; // Reset to the first exercise
       }
+      
+      const currentExercise = exercises[exerciseIndex];
+      const exerciseParts = currentExercise.split(" ");
+      const exerciseName = exerciseParts.slice(0, -1).join(" ");
+      const exerciseDuration = parseInt(exerciseParts[exerciseParts.length - 2]);
+      
+      moveDisplay.innerText = exerciseName; // Show the exercise name
+      startTimer(exerciseDuration); // Start the timer for this exercise
+      exerciseIndex++;
     }
 
-    // Update the move on page load
-    updateMove();
-
-    // Button to go to the next move
-    document.getElementById('next-move').addEventListener('click', function() {
-      moveIndex++; // Move to the next move
-      if (moveIndex >= moves.length) {
-        moveIndex = 0; // Loop back to the first move
-      }
-      updateMove(); // Update the displayed move
+    // Start the workout by clicking "Go" button
+    startButton.addEventListener('click', function() {
+      moveToNextExercise(); // Start with the first exercise
+      startButton.disabled = true; // Disable the button after clicking
     });
 
-    // Timer logic (optional)
-    let timer = 60; // Example timer in seconds
-    let timerDisplay = document.getElementById('timer');
-    if (timerDisplay) {
-      setInterval(function() {
-        if (timer > 0) {
-          timer--;
-          timerDisplay.innerText = timer;
-        }
-      }, 1000);
-    }
-
+    // (Optional) Button to manually go to the next exercise
+    nextMoveButton.addEventListener('click', moveToNextExercise);
   })
   .catch(error => {
     console.error('Error loading moves.json:', error);
