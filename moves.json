@@ -2,21 +2,25 @@
   {
     "name": "Dead Hangs (Static Holds)",
     "description": "Simply hang from the bar with both hands for time. Variation: Try overhand, underhand, and mixed grips. Progression: Add time or try one-arm hangs. Goal: 3–5 sets, 30–60 seconds.",
-    "duration": 30
+    "sets": 5,
+    "time_per_set": 30
   },
   {
     "name": "Towel Hangs / Pull-Ups",
     "description": "Loop a towel over the bar and grip both ends. Mimics gripping a gi sleeve or collar. Progression: Do pull-ups while holding towels. Goal: 3–4 sets, 5–10 reps or 20–30s hangs.",
-    "duration": 30
+    "sets": 4,
+    "time_per_set": 20
   },
   {
     "name": "Finger Hangs",
     "description": "Use just your fingers (e.g., 3-finger or 2-finger grip) on the bar or a ledge. Builds tendon and finger strength for grip fighting. Note: Start cautiously; tendon injuries take a long time to heal.",
-    "duration": 30
+    "sets": 5,
+    "time_per_set": 20
   },
   {
     "name": "L-Sit Hangs / Core Hangs",
     "description": "Hang and lift your legs into an L-position. Engages core and increases time under tension for your grip. Goal: 3 sets, 20–30 seconds.",
-    "duration": 20
+    "sets": 3,
+    "time_per_set": 20
   }
 ]
