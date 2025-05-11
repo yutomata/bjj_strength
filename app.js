@@ -1,4 +1,3 @@
-// Ensure all the necessary DOM elements are loaded before starting the timer
 window.onload = function () {
   // Fetch exercises from moves.json
   fetch('moves.json')
@@ -25,6 +24,9 @@ window.onload = function () {
       function startTimer(duration) {
         let timeRemaining = duration;
         timerDisplay.innerText = timeRemaining;
+
+        // Clear any existing interval
+        clearInterval(timerInterval);
 
         timerInterval = setInterval(function () {
           timeRemaining--;
