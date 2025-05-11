@@ -47,9 +47,9 @@ fetch('moves.json')
       // Log the exercise to debug it
       console.log('Current Exercise:', currentExercise);
 
-      // Extract the exercise name and duration using regex
+      // Try to extract the name and the duration
       const exerciseParts = currentExercise.match(/^(.+?)\s\((\d+)\sseconds\)$/);
-      
+
       if (exerciseParts) {
         const exerciseName = exerciseParts[1]; // Extract exercise name
         const exerciseDuration = parseInt(exerciseParts[2]); // Extract and parse duration (e.g., 10 seconds)
