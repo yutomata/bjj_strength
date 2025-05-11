@@ -10,7 +10,9 @@ window.onload = function () {
     .then(data => {
       let exercises = data; // Array of exercises
       let exerciseIndex = 0; // Track current exercise
+      let setIndex = 0; // Track current set for the current exercise
       let timerInterval;
+      let timeRemaining;
 
       // DOM elements
       const moveDisplay = document.getElementById('move-display');
@@ -22,7 +24,7 @@ window.onload = function () {
 
       // Function to update exercise and timer
       function startTimer(duration) {
-        let timeRemaining = duration;
+        timeRemaining = duration;
         timerDisplay.innerText = timeRemaining;
 
         // Clear any existing interval
@@ -36,12 +38,20 @@ window.onload = function () {
           if (timeRemaining <= 0) {
             clearInterval(timerInterval); // Stop the timer
             sound.play(); // Play beep sound
-            moveToNextExercise(); // Move to the next exercise automatically
+            setIndex++;
+
+            if (setIndex < currentExercise.sets) {
+              // If there are more sets, restart the timer for the next set
+              moveToNextSet();
+            } else {
+              // If all sets are completed, move to the next exercise
+              moveToNextExercise();
+            }
           }
         }, 1000); // Update every second
       }
 
-      // Function to display the next exercise
+      // Function to move to the next exercise
       function moveToNextExercise() {
         if (exerciseIndex >= exercises.length) {
           exerciseIndex = 0; // Reset to the first exercise
@@ -54,13 +64,27 @@ window.onload = function () {
         moveDisplay.innerText = currentExercise.name;
         descriptionDisplay.innerText = currentExercise.description;
 
-        // Start the timer for the exercise duration
-        startTimer(currentExercise.duration);
+        // Reset setIndex for the next exercise
+        setIndex = 0;
+
+        // Start the first set for the exercise
+        startTimer(currentExercise.time_per_set);
 
         exerciseIndex++;
       }
 
-      // Start the workout by clicking "Go" button
+      // Function to move to the next set
+      function moveToNextSet() {
+        const currentExercise = exercises[exerciseIndex - 1]; // Get the current exercise
+
+        // Update the set display (e.g., "Set 1/5")
+        moveDisplay.innerText = `${currentExercise.name} (Set ${setIndex + 1}/${currentExercise.sets})`;
+
+        // Start the timer for the next set
+        startTimer(currentExercise.time_per_set);
+      }
+
+      // Start the workout by clicking "Start" button
       startButton.addEventListener('click', function () {
         moveToNextExercise(); // Start with the first exercise
         startButton.disabled = true; // Disable the button after clicking
