@@ -10,7 +10,7 @@ fetch('moves.json')
     let exercises = data; // Array of exercises
     let exerciseIndex = 0; // Track current exercise
     let timerInterval;
-    
+
     // DOM elements
     const moveDisplay = document.getElementById('move-display');
     const timerDisplay = document.getElementById('timer');
@@ -43,19 +43,32 @@ fetch('moves.json')
       }
       
       const currentExercise = exercises[exerciseIndex];
-      // Match the number within parentheses, assuming format like "(10 seconds)"
-      const exerciseParts = currentExercise.match(/^(.*)\s\((\d+)\sseconds\)$/);
       
-      if (!exerciseParts) {
+      // Log the exercise to debug it
+      console.log('Current Exercise:', currentExercise);
+
+      // Extract the exercise name and duration using regex
+      const exerciseParts = currentExercise.match(/^(.+?)\s\((\d+)\sseconds\)$/);
+      
+      if (exerciseParts) {
+        const exerciseName = exerciseParts[1]; // Extract exercise name
+        const exerciseDuration = parseInt(exerciseParts[2]); // Extract and parse duration (e.g., 10 seconds)
+        
+        // Log the parsed data for debugging
+        console.log('Exercise Name:', exerciseName);
+        console.log('Exercise Duration (in seconds):', exerciseDuration);
+        
+        // If we have valid data, update the display and start the timer
+        if (!isNaN(exerciseDuration)) {
+          moveDisplay.innerText = exerciseName; // Show the exercise name
+          startTimer(exerciseDuration); // Start the timer for this exercise
+        } else {
+          console.error('Invalid exercise duration:', exerciseDuration);
+        }
+      } else {
         console.error('Invalid exercise format:', currentExercise);
-        return;
       }
-      
-      const exerciseName = exerciseParts[1]; // Extract exercise name
-      const exerciseDuration = parseInt(exerciseParts[2]); // Extract and parse duration (e.g., 10 seconds)
-      
-      moveDisplay.innerText = exerciseName; // Show the exercise name
-      startTimer(exerciseDuration); // Start the timer for this exercise
+
       exerciseIndex++;
     }
 
