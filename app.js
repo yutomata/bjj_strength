@@ -31,7 +31,7 @@ fetch('moves.json')
         if (timeRemaining <= 0) {
           clearInterval(timerInterval); // Stop the timer
           sound.play(); // Play beep sound
-          moveToNextExercise();
+          moveToNextExercise(); // Move to the next exercise automatically
         }
       }, 1000); // Update every second
     }
@@ -58,8 +58,11 @@ fetch('moves.json')
       startButton.disabled = true; // Disable the button after clicking
     });
 
-    // (Optional) Button to manually go to the next exercise
-    nextMoveButton.addEventListener('click', moveToNextExercise);
+    // Manual "Next Move" button
+    nextMoveButton.addEventListener('click', function() {
+      clearInterval(timerInterval); // Stop the current timer if "Next Move" is clicked
+      moveToNextExercise(); // Move to the next exercise
+    });
   })
   .catch(error => {
     console.error('Error loading moves.json:', error);
